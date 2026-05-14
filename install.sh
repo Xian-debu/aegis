@@ -25,6 +25,11 @@ cp "$(dirname "$0")"/tests/*.py "$PREFIX/aegis/tests/"
 
 echo "✓ AEGIS Python package installed to $PREFIX/aegis/"
 
+# Copy AEGIS scripts (v2.0.0 guardrail system)
+mkdir -p "$PREFIX/scripts"
+cp "$(dirname "$0")"/scripts/* "$PREFIX/scripts/"
+echo "✓ AEGIS scripts installed to $PREFIX/scripts/"
+
 # Create aegis wrapper script
 cat > "$PREFIX/aegis/aegis" << 'WRAPPER'
 #!/usr/bin/env python3

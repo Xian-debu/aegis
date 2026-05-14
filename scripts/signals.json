@@ -1,0 +1,326 @@
+{
+  "_description": "System Drive Signal Definitions — pattern → action resonance mapping",
+  "_version": "3.0.0",
+  "_created": "2026-05-12",
+  "_updated": "2026-05-14 (Evolution 3: 防呆大规模扩展)",
+  "_evolution_note": "error→memory: 5→32, tool→memory: 8→27, context_signals: 7→11, added guardrail_anti_patterns",
+
+  "context_signals": {
+    "rag_kb_work": {
+      "match": {
+        "cwd_contains": ["/root/rag-kb"],
+        "files_touched": ["*.py", "*.md"],
+        "keywords": ["kb", "rag", "ingest", "chunk", "embed", "vector", "knowledge"]
+      },
+      "action": {
+        "preload_memories": ["PROJ-RAGKB-0001", "EXP-PAT-rag-kb-arch", "kb-chinese-search-improvement"],
+        "ensure_services": ["ollama"],
+        "tools_warm": ["kb_status"],
+        "validate_script": "validate_services.py",
+        "description": "RAG-KB 开发/维护模式"
+      }
+    },
+
+    "local_ai_work": {
+      "match": {
+        "cwd_contains": ["/root/.claude/scripts"],
+        "files_touched": ["local_ai.py", "ollama*"],
+        "keywords": ["ollama", "model", "lai", "qwen", "nomic", "minicpm", "embedding"]
+      },
+      "action": {
+        "preload_memories": ["PROJ-OLLAM-0001"],
+        "ensure_services": ["ollama"],
+        "tools_warm": ["ollama_ps", "lai_status"],
+        "validate_script": "validate_services.py",
+        "description": "本地 AI 模型管理模式"
+      }
+    },
+
+    "framework_work": {
+      "match": {
+        "cwd_contains": ["/root/project/framework", "/root/project"],
+        "files_touched": ["net_define_*.py", "run.py", "trainer.py"],
+        "keywords": ["training", "model", "optuna", "kfold", "classifier", "batch", "encoder", "fcn"]
+      },
+      "action": {
+        "preload_memories": ["PROJ-FWREF-0000", "oom-dataloader-diagnosis", "oom-dataloader-fork-bomb", "xgboost-cuda-fork-conflict"],
+        "ensure_services": ["docker", "dev_container"],
+        "tools_warm": ["docker_exec_dev"],
+        "validate_script": null,
+        "description": "框架开发/训练模式"
+      }
+    },
+
+    "thesis_work": {
+      "match": {
+        "cwd_contains": ["/root/tex_project"],
+        "files_touched": ["*.tex", "*.pdf", "*.png"],
+        "keywords": ["latex", "xelatex", "compile", "论文", "章节", "section", "图表"]
+      },
+      "action": {
+        "preload_memories": ["PROJ-THESIS-0000", "leaf-latex-ops", "thesis-writing-methodology", "data-driven-tex-figures", "thesis-review-甄别"],
+        "ensure_services": ["latex-dev"],
+        "tools_warm": [],
+        "validate_script": null,
+        "description": "论文写作/编译模式"
+      }
+    },
+
+    "memory_forest_work": {
+      "match": {
+        "cwd_contains": ["/root/.claude/projects/-root/memory"],
+        "files_touched": ["*.md"],
+        "keywords": ["memory", "forest", "heartbeat", "node", "ROOT", "LEAF", "记忆", "规范", "哲学"]
+      },
+      "action": {
+        "preload_memories": ["MF-SPEC-0001", "MF-RUNTIME-0002", "PHIL-ROOT-0000"],
+        "ensure_services": [],
+        "tools_warm": ["mf_status"],
+        "validate_script": "validate_mf.py",
+        "description": "记忆森林管理模式"
+      }
+    },
+
+    "system_maintenance": {
+      "match": {
+        "keywords": ["清理", "clean", "磁盘", "disk", "docker", "内存", "memory", "优化", "optimize", "进化"]
+      },
+      "action": {
+        "preload_memories": ["EXP-CORE-0008", "wsl2-memory-cache-illusion", "wsl2-swap-orphan"],
+        "ensure_services": [],
+        "tools_warm": ["system_health_check"],
+        "validate_script": "validate_services.py",
+        "description": "系统维护模式"
+      }
+    },
+
+    "debug_mode": {
+      "match": {
+        "keywords": ["error", "错误", "bug", "fail", "失败", "crash", "OOM", "timeout", "debug", "调试", "修复", "fix"]
+      },
+      "action": {
+        "preload_memories": ["EXP-PAT-oom-dataloader-diagnosis", "EXP-PAT-stale-bytecode-cache", "diagnose-before-modify", "validate-driven-guardrail"],
+        "ensure_services": [],
+        "tools_warm": ["nvidia_smi", "free_h", "dmesg_tail"],
+        "validate_script": "validate_all.py",
+        "description": "问题诊断/调试模式 — 先跑 validate_all.py, 不要自己设计测试"
+      }
+    },
+
+    "npu_work": {
+      "match": {
+        "cwd_contains": ["/root/.claude/scripts/npu"],
+        "files_touched": ["*.py", "*.sh"],
+        "keywords": ["npu", "openvino", "bge-m3", "embedding", "intel", "pooling", "cosine"]
+      },
+      "action": {
+        "preload_memories": ["npu-embedding-pooling-fix", "npu-openvino-deployment", "validate-driven-guardrail", "diagnose-before-modify"],
+        "ensure_services": [],
+        "tools_warm": ["npu_health"],
+        "validate_script": "npu/validate_npu.py",
+        "description": "NPU 嵌入服务模式 — 0.55 baseline, 不要误诊为bug"
+      }
+    },
+
+    "ppt_work": {
+      "match": {
+        "cwd_contains": ["/root/.claude/scripts"],
+        "files_touched": ["ppt_*.py", "*.pptx"],
+        "keywords": ["ppt", "powerpoint", "幻灯片", "zone", "deco", "font", "pptx"]
+      },
+      "action": {
+        "preload_memories": ["ppt-creation-mastery", "ai-visual-review-advisory-only", "ai-review-layered-trust"],
+        "ensure_services": [],
+        "tools_warm": [],
+        "validate_script": null,
+        "description": "PPT 制作模式 — AI review is ADVISORY ONLY"
+      }
+    },
+
+    "browser_automation": {
+      "match": {
+        "keywords": ["cdp", "playwright", "browser", "豆包", "doubao", "cookie", "chrome", "edge", "spa"]
+      },
+      "action": {
+        "preload_memories": ["browser-ui-fallback", "runtime-ui-probing", "v20-abe-cookie-dead-end", "chat-response-extraction"],
+        "ensure_services": [],
+        "tools_warm": ["cdp_check"],
+        "validate_script": null,
+        "description": "浏览器自动化模式 — CDP > API, AB配置≠UI实现"
+      }
+    },
+
+    "aegis_system": {
+      "match": {
+        "cwd_contains": ["/root/.claude/aegis"],
+        "keywords": ["aegis", "guardian", "bridge", "diagnose", "remediate"]
+      },
+      "action": {
+        "preload_memories": ["aegis-project"],
+        "ensure_services": ["claude-guardian"],
+        "tools_warm": ["aegis_status"],
+        "validate_script": "validate_services.py",
+        "description": "AEGIS 整合系统模式"
+      }
+    }
+  },
+
+  "health_checks": {
+    "disk": {"command": "df -h / | awk 'NR==2{print $5, $3\"/\"$2}'", "warn_threshold": "80%"},
+    "memory": {"command": "free -h | awk 'NR==2{print $3\"/\"$2, $4\" free\"}'"},
+    "gpu": {"command": "/usr/lib/wsl/lib/nvidia-smi --query-gpu=memory.used,memory.total,utilization.gpu --format=csv,noheader"},
+    "docker": {"command": "docker ps -a --format '{{.Names}}:{{.Status}}' | paste -sd ';'"},
+    "ollama": {"command": "ollama list 2>/dev/null | tail -n +2 | wc -l"},
+    "swap": {"command": "free -h | awk 'NR==3{print $3\"/\"$2}'"}
+  },
+
+  "task_continuity": {
+    "scan_paths": [
+      "/root/.claude/projects/-root/memory/projects-tree",
+      "/root/.claude/projects/-root/memory/experiences-tree"
+    ],
+    "dormant_priority": ["ABSOLUTE", "CRITICAL", "HIGH"],
+    "max_suggestions": 5
+  },
+
+  "resonance_rules": {
+    "tool_pattern_to_memory": {
+      "Bash.*ollama": ["PROJ-OLLAM-0001"],
+      "Bash.*kb_|Bash.*kb ": ["PROJ-RAGKB-0001", "kb-chinese-search-improvement"],
+      "Bash.*docker exec dev": ["PROJ-FWREF-0000", "oom-dataloader-diagnosis"],
+      "Bash.*latex|xelatex": ["PROJ-THESIS-0000", "thesis-writing-methodology", "latex-blind-verification"],
+      "Bash.*nvidia-smi|nvidia": ["PROJ-OLLAM-0001", "wsl2-gpu-troubleshooting"],
+      "Read.*memory/": ["MF-SPEC-0001", "MF-RUNTIME-0002"],
+      "Read.*rag-kb": ["PROJ-RAGKB-0001"],
+      "Edit.*framework": ["PROJ-FWREF-0000"],
+      "Bash.*validate_": ["validate-driven-guardrail"],
+      "Bash.*git push": ["auto-propose-github-push"],
+      "Bash.*pip install|pip3 install": ["mcp-zero-dep"],
+      "Write.*memory/": ["MF-SPEC-0001", "MF-RUNTIME-0002"],
+      "Edit.*npu": ["npu-embedding-pooling-fix", "diagnose-before-modify", "validate-driven-guardrail"],
+      "Read.*npu": ["npu-embedding-pooling-fix", "diagnose-before-modify"],
+      "Edit.*system_drive|signals.json": ["system-drive-architecture"],
+      "Bash.*ws ": ["use-ws-instead-of-websearch"],
+      "WebSearch|WebFetch": ["use-ws-instead-of-websearch"],
+      "Bash.*ppt_": ["ppt-creation-mastery", "ai-visual-review-advisory-only"],
+      "Bash.*cdp|Bash.*browser": ["browser-ui-fallback", "runtime-ui-probing", "chat-response-extraction"],
+      "Edit.*validate_": ["validate-driven-guardrail"],
+      "Edit.*settings.json|settings.local.json": ["system-drive-architecture"],
+      "Bash.*docker ps|docker container": ["docker-expose-vs-publish"],
+      "Bash.*train|Bash.*run.py": ["oom-dataloader-diagnosis", "training-progress-diagnosis"],
+      "Bash.*free -h|Bash.*df -h": ["wsl2-memory-cache-illusion", "wsl2-swap-orphan"],
+      "Bash.*systemctl": ["aegis-project"],
+      "Bash.*openvino|Bash.*npu_server": ["npu-openvino-deployment", "openvino-constoutput-api"],
+      "Read.*feedback/": ["diagnose-before-modify"]
+    },
+
+    "error_pattern_to_memory": {
+      "OOM|out of memory|MemoryError": ["oom-dataloader-diagnosis", "oom-dataloader-fork-bomb"],
+      "CUDA error|cuda error|out of memory.*GPU": ["PROJ-OLLAM-0001", "xgboost-cuda-fork-conflict"],
+      "Connection refused|timeout|ECONNREFUSED": ["multi-source-search", "windows-wsl2-npu-bridge"],
+      "ImportError|ModuleNotFoundError": ["stale-bytecode-cache", "mcp-zero-dep"],
+      "Permission denied|not allowed": ["system-tree/branch-safety"],
+      "cosine.*0\\.[45]|similarity.*0\\.[45]|cos.*0\\.[45]": ["npu-embedding-pooling-fix", "diagnose-before-modify"],
+      "segfault|SIGSEGV|segmentation fault": ["wsl2-gpu-troubleshooting", "xgboost-cuda-fork-conflict"],
+      "cannot find|not found|No such file": ["stale-bytecode-cache", "verify-merge-order"],
+      "indent|缩进|bibliography|参考文献": ["natbib-bibliography-indent"],
+      "SSL.*timeout|handshake.*timed|ssl.*error": ["multi-source-search"],
+      "no space left|disk full|ENOSPC": ["wsl2-swap-orphan", "wsl2-memory-cache-illusion"],
+      "kill|Killed|exited with|signal 9": ["oom-dataloader-diagnosis", "oom-dataloader-fork-bomb"],
+      "NaN|nan value|inf value": ["npu-embedding-pooling-fix", "diagnose-before-modify"],
+      "401|403|unauthenticated|unauthorized": ["v20-abe-cookie-dead-end", "browser-ui-fallback"],
+      "unknown flag|invalid argument|unrecognized": ["docker-expose-vs-publish", "verify-merge-order"],
+      "captcha|验证码|风控|blocked": ["browser-ui-fallback", "api-reverse-pattern"],
+      "中文.*输入|IME|candidate window": ["vscode-ime-native-titlebar"],
+      "caption.*page|page.*height|overflow": ["wkhtmltopdf-page-height"],
+      "compile.*error|undefined control|missing \\$": ["latex-blind-verification", "leaf-latex-ops"],
+      "bytes.*mismatch|size.*mismatch|corruption|truncat": ["wsl2-memory-cache-illusion"],
+      "pooling.*fail|pooling.*bug|pooling.*broken|pooling.*wrong": ["npu-embedding-pooling-fix", "diagnose-before-modify"],
+      "embedding.*dimension|wrong.*dim|dim.*mismatch": ["npu-openvino-deployment", "openvino-constoutput-api"],
+      "\\bcos\\b|=0\\.\\d{2}|similarity.*drop": ["diagnose-before-modify", "validate-driven-guardrail"],
+      "download.*fail|download.*interrupt|\\bcurl.*error": ["multi-source-search", "bandwidth-test"],
+      "docker.*exited|container.*exit|Exited \\(255\\)": ["docker-expose-vs-publish"],
+      "swap.*full|swap.*usage|vio.*swap": ["wsl2-swap-orphan"],
+      "fork|worker.*process|DataLoader.*worker": ["oom-dataloader-fork-bomb", "batch-notebook-resilience"],
+      "memory.*leak|leak.*memory|ram.*grow": ["wsl2-memory-cache-illusion", "oom-dataloader-diagnosis"],
+      "npm.*install|pip.*install|package.*install": ["mcp-zero-dep"],
+      "Cookie.*decrypt|Cookie.*extract|AES.*key": ["v20-abe-cookie-dead-end", "browser-ui-fallback"],
+      "AB.*config|feature.*flag|remote.*config": ["runtime-ui-probing"],
+      "caption.*miss|caption.*disappear|float.*page": ["html-pdf-latex-figures", "wkhtmltopdf-page-height"]
+    }
+  },
+
+  "guardrail_anti_patterns": {
+    "_description": "Patterns that indicate the LLM is about to make a mistake. PreToolUse hook checks Edit/Write commands against these.",
+
+    "designing_own_test": {
+      "pattern": "(let me|I'll|I will) (write|design|create|build) (a|my own|some) (test|verification|check)",
+      "severity": "HIGH",
+      "action": "STOP: Check if project has existing tests/validate scripts first. Run validate_all.py --quick.",
+      "memory_ref": "diagnose-before-modify"
+    },
+
+    "judging_by_number": {
+      "pattern": "(this (number|value|result|output) (seems|looks|is) (wrong|off|incorrect|strange|weird|abnormal))|(that can't be right)|(should be (lower|higher|different|closer))",
+      "severity": "CRITICAL",
+      "action": "STOP: Check memory for known baselines before judging. 'Wrong' numbers are often known baselines. grep MEMORY.md first.",
+      "memory_ref": "diagnose-before-modify"
+    },
+
+    "modify_without_context": {
+      "pattern": "(let me|I'll|I will) (just )?(quickly )?(fix|modify|change|edit|update|patch) (this|the|that)",
+      "severity": "HIGH",
+      "action": "STOP: Run validate_all.py --quick for this module first. grep MEMORY.md for relevant memories.",
+      "memory_ref": "validate-driven-guardrail"
+    },
+
+    "exploring_without_search": {
+      "pattern": "(let me|I'll|I will) (try|explore|see if|check if|investigate|figure out)",
+      "severity": "MEDIUM",
+      "action": "WARNING: Have you checked memory and run ws first? Don't explore blind.",
+      "memory_ref": "use-ws-instead-of-websearch"
+    },
+
+    "assuming_api_behavior": {
+      "pattern": "(I think|probably|should be|I believe|the API|the function|the method) (should|would|must|probably|likely)",
+      "severity": "HIGH",
+      "action": "STOP: You're guessing API behavior. Run ws to verify, or check code directly.",
+      "memory_ref": "signature-body-drift"
+    },
+
+    "trusting_comment_over_code": {
+      "pattern": "(the comment says|the doc says|the README says|according to the doc)",
+      "severity": "MEDIUM",
+      "action": "WARNING: Comments/docs can be outdated. Verify against actual code/behavior.",
+      "memory_ref": "verify-merge-order"
+    },
+
+    "design_test_from_scratch": {
+      "pattern": "(I'll|I will|let me) (check|verify|test|confirm) (by|with|using) (a quick|a simple|a small|my own)",
+      "severity": "CRITICAL",
+      "action": "STOP: Never design your own test. Run existing tests. Use validate scripts.",
+      "memory_ref": "diagnose-before-modify"
+    },
+
+    "background_ws": {
+      "pattern": "run_in_background.*true.*ws|ws.*run_in_background",
+      "severity": "HIGH",
+      "action": "STOP: Never run ws in background. Use --quick for fast search.",
+      "memory_ref": "use-ws-instead-of-websearch"
+    },
+
+    "hardcode_data": {
+      "pattern": "(I'll|I will|let me) (make up|invent|fabricate|hardcode|fake|mock up) (some |the )?(data|numbers|values|results)",
+      "severity": "CRITICAL",
+      "action": "STOP: All data must come from real measurements/code output. Never fabricate.",
+      "memory_ref": "data-driven-tex-figures"
+    },
+
+    "ai_review_as_truth": {
+      "pattern": "(the AI|doubao|the bot|the reviewer|the review) (says|said|reported|found|detected|identified)",
+      "severity": "MEDIUM",
+      "action": "WARNING: AI review = ADVISORY ONLY. Verify with programmatic checks first.",
+      "memory_ref": "ai-review-layered-trust"
+    }
+  }
+}
